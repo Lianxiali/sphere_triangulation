@@ -97,6 +97,56 @@ public:
         return triangles;
     }
 
+    std::vector<float> get_triangle_areas() const {
+        std::vector<float> areas;
+        areas.reserve(triangles.size());
+
+        for (const auto& tri : triangles) {
+            const Vertex& v0 = vertices[tri.vertices[0]];
+            const Vertex& v1 = vertices[tri.vertices[1]];
+            const Vertex& v2 = vertices[tri.vertices[2]];
+
+            // Compute area using cross product
+            Vertex edge1 = {v1.x - v0.x, v1.y - v0.y, v1.z - v0.z};
+            Vertex edge2 = {v2.x - v0.x, v2.y - v0.y, v2.z - v0.z};
+
+            Vertex cross_product = {
+                edge1.y * edge2.z - edge1.z * edge2.y,
+                edge1.z * edge2.x - edge1.x * edge2.z,
+                edge1.x * edge2.y - edge1.y * edge2.x
+            };
+
+            float area = 0.5f * std::sqrt(cross_product.x * cross_product.x +
+                                          cross_product.y * cross_product.y +
+                                          cross_product.z * cross_product.z);
+
+            areas.push_back(area);
+        }
+
+        return areas;
+    }
+
+    std::vector<Vertex> get_triangle_centroids() const {
+        std::vector<Vertex> centroids;
+        centroids.reserve(triangles.size());
+
+        for (const auto& tri : triangles) {
+            const Vertex& v0 = vertices[tri.vertices[0]];
+            const Vertex& v1 = vertices[tri.vertices[1]];
+            const Vertex& v2 = vertices[tri.vertices[2]];
+
+            Vertex centroid = {
+                (v0.x + v1.x + v2.x) / 3.0f,
+                (v0.y + v1.y + v2.y) / 3.0f,
+                (v0.z + v1.z + v2.z) / 3.0f
+            };
+
+            centroids.push_back(centroid);
+        }
+
+        return centroids;
+    }
+
 private:
     Vertex origin;
     float radius;
@@ -210,6 +260,17 @@ int main() {
     std::cout << "Origin: (" << sphere.get_origin().x << ", " << sphere.get_origin().y << ", " << sphere.get_origin().z << ")" << std::endl;
     std::cout << "Radius: " << sphere.get_radius() << std::endl;
     std::cout << "Resolution: " << sphere.get_resolution() << std::endl;    
+    std::vector<float> areas = sphere.get_triangle_areas();
+    for (size_t i = 0; i < areas.size(); ++i) {
+        std::cout << "Area of triangle " << i << ": " << areas[i] << std::endl;
+    }
+
+    std::vector<Vertex> centroids = sphere.get_triangle_centroids();
+    for (size_t i = 0; i < centroids.size(); ++i) {
+        const auto& c = centroids[i];
+        std::cout << "Centroid of triangle " << i << ": (" << c.x << ", " << c.y << ", " << c.z << ")" << std::endl;
+    }
+        
     sphere.write_to_vtk("sphere.vtk");
     std::cout << "Mesh written to sphere.vtk" << std::endl;
 
