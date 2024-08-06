@@ -70,6 +70,14 @@ public:
         file.close();
     }
 
+    int get_total_vertices() const {
+        return vertices.size();
+    }
+
+    int get_total_cells() const {
+        return triangles.size();
+    }
+
 private:
     Vertex origin;
     float radius;
@@ -178,7 +186,8 @@ private:
 int main() {
     Sphere sphere({0, 0, 0}, 0.5f, 3);
     std::cout << "Generated sphere mesh." << std::endl;
-
+    std::cout << "Total vertices: " << sphere.get_total_vertices() << std::endl;
+    std::cout << "Total cells: " << sphere.get_total_cells() << std::endl;
     sphere.write_to_vtk("sphere.vtk");
     std::cout << "Mesh written to sphere.vtk" << std::endl;
 
