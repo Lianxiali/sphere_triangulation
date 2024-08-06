@@ -77,6 +77,25 @@ public:
     int get_total_cells() const {
         return triangles.size();
     }
+    Vertex get_origin() const {
+        return origin;
+    }
+
+    float get_radius() const {
+        return radius;
+    }
+
+    int get_resolution() const {
+        return resolution;
+    }
+
+    const std::vector<Vertex>& get_vertices() const {
+        return vertices;
+    }
+
+    const std::vector<Triangle>& get_triangles() const {
+        return triangles;
+    }
 
 private:
     Vertex origin;
@@ -188,6 +207,9 @@ int main() {
     std::cout << "Generated sphere mesh." << std::endl;
     std::cout << "Total vertices: " << sphere.get_total_vertices() << std::endl;
     std::cout << "Total cells: " << sphere.get_total_cells() << std::endl;
+    std::cout << "Origin: (" << sphere.get_origin().x << ", " << sphere.get_origin().y << ", " << sphere.get_origin().z << ")" << std::endl;
+    std::cout << "Radius: " << sphere.get_radius() << std::endl;
+    std::cout << "Resolution: " << sphere.get_resolution() << std::endl;    
     sphere.write_to_vtk("sphere.vtk");
     std::cout << "Mesh written to sphere.vtk" << std::endl;
 
